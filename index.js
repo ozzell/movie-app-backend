@@ -20,10 +20,22 @@ app.get('/search-movies', async (req, res) => {
 })
 
 app.get('/movie', async (req, res) => {
-  const searchString = req.query.i
-  const movie = await fetchMovie(searchString)
+  const movieSearchString = req.query.i
+  const movie = await fetchMovie(movieSearchString)
+
+  const reviewSearchString = movie.Title
+  const review = await fetchReview(reviewSearchString)
+  const nytReview = review.results && review.results[0]
+  const reviewObject =
+    nytReview
+      ? {
+          headline: nytReview.headline,
+          summary: nytReview.summary_short
+        }
+      : {}
+  const movieAndReview = {...movie, NytReview: reviewObject}
   movie
-    ? res.send(movie)
+    ? res.send(movieAndReview)
     : res.status(404).end()
 })
 
