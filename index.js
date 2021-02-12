@@ -1,15 +1,17 @@
 require('dotenv').config()
 const express = require('express')
+const cors = require('cors')
 const {fetchMovies, fetchMovie, fetchReview} = require('./routes/movie-api')
 
 const app = express()
+
+app.use(cors())
 
 app.get('/', (req, res) => {
   res.send('<h1>Movie app</h1>')
 })
 
 app.get('/search-movies', async (req, res) => {
-  console.log('search-movies')
   const searchString = req.query.s
   const movies = await fetchMovies(searchString)
   movies
