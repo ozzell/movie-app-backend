@@ -22,29 +22,24 @@ app.get('/search-movies', async (req, res) => {
 app.get('/movie', async (req, res) => {
   const movieSearchString = req.query.i
   const movie = await fetchMovie(movieSearchString)
-
-  const reviewSearchString = movie.Title
-  const review = await fetchReview(reviewSearchString)
-  const nytReview = review.results && review.results[0]
-  const reviewObject =
-    nytReview
-      ? {
-          headline: nytReview.headline,
-          summary: nytReview.summary_short
-        }
-      : {}
-  const movieAndReview = {...movie, NytReview: reviewObject}
   movie
-    ? res.send(movieAndReview)
+    ? res.send(movie)
     : res.status(404).end()
 })
 
 app.get('/review', async (req, res) => {
   const searchString = req.query.r
   const review = await fetchReview(searchString)
-  review
-    ? res.send(review)
-    : res.status(404).end()
+  const reviewResults = review.results && review.results[0]
+  const reviewObject = reviewResults &&
+    {
+      display_title: reviewResults.display_title,
+      headline: reviewResults.headline,
+      summary: reviewResults.summary_short
+    }
+  reviewObject
+    ? res.send(reviewObject)
+    : res.status(404).send({error: 'No reviews found'})
 })
 
 const PORT = 3001
