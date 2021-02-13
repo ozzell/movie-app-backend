@@ -7,6 +7,8 @@ const app = express()
 
 app.use(cors())
 
+const noMovieErrorResponse = res => res.status(404).send({error: 'No movie found'})
+
 app.get('/', (req, res) => {
   res.send('<h1>Movie app</h1>')
 })
@@ -14,17 +16,25 @@ app.get('/', (req, res) => {
 app.get('/search-movies', async (req, res) => {
   const searchString = req.query.s
   const movies = await fetchMovies(searchString)
-  movies
+  movies.Response !== 'False'
     ? res.send(movies)
-    : res.status(404).end()
+    : noMovieErrorResponse(res)
 })
 
 app.get('/movie', async (req, res) => {
-  const movieSearchString = req.query.i
-  const movie = await fetchMovie(movieSearchString)
-  movie
-    ? res.send(movie)
-    : res.status(404).end()
+  try {
+    const movieSearchString = req.query.i
+    const movie = await fetchMovie(movieSearchString)
+    const movieObject = (({Title, Year, Genre, Director, Writer, Actors, Plot, Ratings, imdbID}) => (
+      {Title, Year, Genre, Director, Writer, Actors, Plot, Ratings, imdbID}
+    ))(movie)
+    movie.Response !== 'False'
+      ? res.send(movieObject)
+      : noMovieErrorResponse(res)
+  } catch(error) {
+    noMovieErrorResponse(res)
+  }
+  
 })
 
 app.get('/review', async (req, res) => {
