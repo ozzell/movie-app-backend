@@ -1,23 +1,24 @@
-require('dotenv').config()
-const express = require('express')
-const cors = require('cors')
-const {fetchMovies, fetchMovie, fetchReview} = require('./routes/movie-api')
+import express, {Application, Request, Response} from 'express'
+import {fetchMovies, fetchMovie, fetchReview} from './src/routes/movie-api'
+import dotenv from 'dotenv'
+import cors from 'cors'
 
-const app = express()
+dotenv.config()
 
+const app: Application = express()
 app.use(cors())
 
-const noMovieErrorResponse = res => res.status(404).send({error: 'No movie found'})
-const noSearchStringProvidedResponse = res => res.status(400).send({error: 'No search string provided'})
-const genericErrorResponse = res => res.status(500).send({error: 'Something went wrong'})
+const noMovieErrorResponse = (res: Response) => res.status(404).send({error: 'No movie found'})
+const noSearchStringProvidedResponse = (res: Response) => res.status(400).send({error: 'No search string provided'})
+const genericErrorResponse = (res: Response) => res.status(500).send({error: 'Something went wrong'})
 
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
   res.send('<h1>Movie app</h1>')
 })
 
-app.get('/search-movies', async (req, res) => {
+app.get('/search-movies', async (req: Request, res: Response) => {
   try {
-    const searchString = req.query.s
+    const searchString = req.query.s as string
     if (!searchString) {
       noSearchStringProvidedResponse(res)
     }
@@ -30,9 +31,9 @@ app.get('/search-movies', async (req, res) => {
   }
 })
 
-app.get('/movie', async (req, res) => {
+app.get('/movie', async (req: Request, res: Response) => {
   try {
-    const movieSearchString = req.query.i
+    const movieSearchString = req.query.i as string
     if (!movieSearchString) {
       noSearchStringProvidedResponse(res)
     }
@@ -43,15 +44,14 @@ app.get('/movie', async (req, res) => {
     movie.Response !== 'False'
       ? res.send(movieObject)
       : noMovieErrorResponse(res)
-  } catch(error) {
+  } catch (error) {
     genericErrorResponse(res)
   }
-  
 })
 
-app.get('/review', async (req, res) => {
+app.get('/review', async (req: Request, res: Response) => {
   try {
-    const searchString = req.query.r
+    const searchString = req.query.r as string
     if (!searchString) {
       noSearchStringProvidedResponse(res)
     }
@@ -66,10 +66,9 @@ app.get('/review', async (req, res) => {
     reviewObject
       ? res.send(reviewObject)
       : res.status(404).send({error: 'No reviews found'})
-  } catch(error) {
+  } catch (error) {
     genericErrorResponse(res)
   }
-  
 })
 
 const PORT = 3001
