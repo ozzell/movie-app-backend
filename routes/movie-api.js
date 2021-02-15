@@ -4,7 +4,7 @@ const NYT_URL = 'https://api.nytimes.com/svc/movies/v2/reviews/search.json'
 
 const fetchMovies = async movieTitle => {
   if (!movieTitle) {
-    return
+    throw new Error("No movieTitle provided")
   }
   const searchUrl = `${OMDB_URL}?s=${movieTitle}&type=movie&apikey=${process.env.OMDB_API_KEY}`
 
@@ -14,7 +14,7 @@ const fetchMovies = async movieTitle => {
 
 const fetchMovie = async id => {
   if (!id) {
-    return
+    throw new Error("No id provided")
   }
   const oneMovieUrl = `${OMDB_URL}?i=${id}&apikey=${process.env.OMDB_API_KEY}`
 
@@ -24,7 +24,7 @@ const fetchMovie = async id => {
 
 const fetchReview = async movieTitle => {
   if (!movieTitle) {
-    return
+    throw new Error("No movieTitle provided")
   }
   const reviewUrl = `${NYT_URL}?query=${movieTitle}&api-key=${process.env.NYT_API_KEY}`
   const response = await fetch(reviewUrl)
