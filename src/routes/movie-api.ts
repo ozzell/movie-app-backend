@@ -1,9 +1,10 @@
 import fetch from 'node-fetch'
+import {Movies, Movie, Review} from './types'
 
 const OMDB_URL = 'http://www.omdbapi.com/'
 const NYT_URL = 'https://api.nytimes.com/svc/movies/v2/reviews/search.json'
 
-const fetchMovies = async (movieTitle: string) => {
+const fetchMovies = async (movieTitle: string): Promise<Movies> => {
   if (!movieTitle) {
     throw new Error('No movieTitle provided')
   }
@@ -13,7 +14,7 @@ const fetchMovies = async (movieTitle: string) => {
   return response.json()
 }
 
-const fetchMovie = async (id: string) => {
+const fetchMovie = async (id: string): Promise<Movie> => {
   if (!id) {
     throw new Error('No id provided')
   }
@@ -23,7 +24,7 @@ const fetchMovie = async (id: string) => {
   return response.json()
 }
 
-const fetchReview = async (movieTitle: string) => {
+const fetchReview = async (movieTitle: string): Promise<Review> => {
   if (!movieTitle) {
     throw new Error('No movieTitle provided')
   }

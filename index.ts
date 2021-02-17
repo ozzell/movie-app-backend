@@ -1,7 +1,7 @@
 import express, {Application, Request, Response} from 'express'
-import {fetchMovies, fetchMovie, fetchReview} from './src/routes/movie-api'
 import dotenv from 'dotenv'
 import cors from 'cors'
+import {fetchMovies, fetchMovie, fetchReview} from './src/routes/movie-api'
 
 dotenv.config()
 
@@ -22,7 +22,9 @@ app.get('/search-movies', async (req: Request, res: Response) => {
     if (!searchString) {
       noSearchStringProvidedResponse(res)
     }
+
     const movies = await fetchMovies(searchString)
+
     movies.Response !== 'False'
       ? res.send(movies)
       : noMovieErrorResponse(res)
@@ -37,10 +39,12 @@ app.get('/movie', async (req: Request, res: Response) => {
     if (!movieSearchString) {
       noSearchStringProvidedResponse(res)
     }
+
     const movie = await fetchMovie(movieSearchString)
     const movieObject = (({Title, Year, Genre, Director, Writer, Actors, Plot, Ratings, imdbID}) => (
       {Title, Year, Genre, Director, Writer, Actors, Plot, Ratings, imdbID}
     ))(movie)
+
     movie.Response !== 'False'
       ? res.send(movieObject)
       : noMovieErrorResponse(res)
@@ -55,6 +59,7 @@ app.get('/review', async (req: Request, res: Response) => {
     if (!searchString) {
       noSearchStringProvidedResponse(res)
     }
+
     const review = await fetchReview(searchString)
     const reviewResults = review.results && review.results[0]
     const reviewObject = reviewResults &&
@@ -63,6 +68,7 @@ app.get('/review', async (req: Request, res: Response) => {
         headline: reviewResults.headline,
         summary: reviewResults.summary_short
       }
+
     reviewObject
       ? res.send(reviewObject)
       : res.status(404).send({error: 'No reviews found'})
