@@ -1,5 +1,6 @@
 export type Movies = {
   Response: string
+  Error?: string
 }
 
 export type Movie = {
@@ -13,6 +14,7 @@ export type Movie = {
   Year?: string
   imdbID: string
   Response: string
+  Error?: string
 }
 
 type ReviewResults = {

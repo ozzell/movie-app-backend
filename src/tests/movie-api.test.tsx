@@ -15,6 +15,7 @@ describe('API: search-movies', () => {
   it('Should return list of movies', async () => {
     const title = 'tenet'
     mockedFetch.mockResolvedValue({
+      ok: () => true,
       json: () => ({
         Search: [{
           Title: title
@@ -35,21 +36,23 @@ describe('API: search-movies', () => {
     const response = await api.get(`/search-movies?s=${title}`)
 
     expect(response.status).toBe(400)
-    expect(JSON.parse(response.text)).toEqual({error: 'No search string provided'})
+    expect(JSON.parse(response.text)).toEqual({Error: 'No search string provided'})
   })
 
   it('Should return error when the search term provided no results', async () => {
     const title = 'Not Made Movie'
     mockedFetch.mockResolvedValue({
+      ok: () => true,
       json: () => (
         {
-          Response: 'False'
+          Response: 'False',
+          Error: 'Movie not found!'
         }
       )
     })
     const response = await api.get(`/search-movies?s=${title}`)
 
-    expect(response.status).toBe(404)
-    expect(JSON.parse(response.text)).toEqual({error: 'No movie found'})
+    expect(response.status).toBe(200)
+    expect(JSON.parse(response.text)).toEqual({Error: 'Movie not found!', Response: 'False'})
   })
 })
