@@ -1,9 +1,12 @@
 import express, {Application, Request, Response} from 'express'
 import cors from 'cors'
+import apicache from 'apicache'
 import {fetchMovies, fetchMovie, fetchReview, HttpError} from './src/routes/movie-api'
 
 const app: Application = express()
 app.use(cors())
+const cache = apicache.middleware
+app.use(cache('5 minutes'))
 
 const genericErrorResponse = (res: Response) => res.status(500).json({Error: 'Something went wrong'})
 const apiErrorResponse = (res: Response, error: string, status: number) => res.status(status).json({Error: error})
