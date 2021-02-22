@@ -31,12 +31,12 @@ describe('API: search-movies', () => {
     expect(firstMovie.Title).toBe(title)
   })
 
-  it('Should return error when no search string provided', async () => {
+  it('Should return error when no movieTitle provided as query', async () => {
     const title = ''
     const response = await api.get(`/search-movies?s=${title}`)
 
     expect(response.status).toBe(400)
-    expect(JSON.parse(response.text)).toEqual({Error: 'No search string provided'})
+    expect(JSON.parse(response.text)).toEqual({Error: 'No movieTitle provided'})
   })
 
   it('Should return error when the search term provided no results', async () => {

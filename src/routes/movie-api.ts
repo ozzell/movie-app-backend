@@ -23,7 +23,7 @@ const checkStatus = (response: Response) => {
 
 const fetchMovies = async (movieTitle: string): Promise<Movies> => {
   if (!movieTitle) {
-    throw new Error('No movieTitle provided')
+    throw new HttpError('No movieTitle provided', 400)
   }
   const searchUrl = `${OMDB_URL}?s=${movieTitle}&type=movie&apikey=${process.env.OMDB_API_KEY}`
 
@@ -34,7 +34,7 @@ const fetchMovies = async (movieTitle: string): Promise<Movies> => {
 
 const fetchMovie = async (id: string): Promise<Movie> => {
   if (!id) {
-    throw new Error('No id provided')
+    throw new HttpError('No id provided', 400)
   }
 
   const oneMovieUrl = `${OMDB_URL}?i=${id}&apikey=${process.env.OMDB_API_KEY}`
@@ -46,7 +46,7 @@ const fetchMovie = async (id: string): Promise<Movie> => {
 
 const fetchReview = async (movieTitle: string): Promise<Review> => {
   if (!movieTitle) {
-    throw new Error('No movieTitle provided')
+    throw new HttpError('No movieTitle provided', 400)
   }
   const reviewUrl = `${NYT_URL}?query=${movieTitle}&api-key=${process.env.NYT_API_KEY}`
   const response = await fetch(reviewUrl)
