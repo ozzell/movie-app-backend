@@ -1,9 +1,8 @@
 import app from '../../app'
 import fetch from 'node-fetch'
+import supertest from 'supertest'
 
-const supertest = require('supertest')
-
-const api = supertest(app)
+const request = supertest(app)
 jest.mock('node-fetch')
 
 type FetchMock = typeof fetch & {
@@ -23,7 +22,7 @@ describe('API: search-movies', () => {
         Response: 'True'
       })
     })
-    const response = await api.get(`/search-movies?s=${title}`)
+    const response = await request.get(`/search-movies?s=${title}`)
 
     expect(response.status).toBe(200)
     const firstMovie = response.body.Search[0]
@@ -33,7 +32,7 @@ describe('API: search-movies', () => {
 
   it('Should return error when no movieTitle provided as query', async () => {
     const title = ''
-    const response = await api.get(`/search-movies?s=${title}`)
+    const response = await request.get(`/search-movies?s=${title}`)
 
     expect(response.status).toBe(400)
     expect(JSON.parse(response.text)).toEqual({Error: 'No movieTitle provided'})
@@ -50,7 +49,7 @@ describe('API: search-movies', () => {
         }
       )
     })
-    const response = await api.get(`/search-movies?s=${title}`)
+    const response = await request.get(`/search-movies?s=${title}`)
 
     expect(response.status).toBe(200)
     expect(JSON.parse(response.text)).toEqual({Error: 'Movie not found!', Response: 'False'})
