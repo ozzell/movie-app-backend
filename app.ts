@@ -3,6 +3,8 @@ import cors from 'cors'
 import apicache from 'apicache'
 import {fetchMovies, fetchMovie, fetchReview, HttpError} from './src/routes/movie-api'
 
+if (process.env.NODE_ENV === 'development') require('dotenv').config()
+
 const app: Application = express()
 app.use(cors())
 const cache = apicache.middleware
